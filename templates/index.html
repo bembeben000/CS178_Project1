@@ -6,71 +6,88 @@
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            margin: 0;
-            padding: 40px;
             background-color: #f4f7f9;
-            color: #333;
             display: flex;
             flex-direction: column;
             align-items: center;
+            justify-content: flex-start;
+            padding-top: 30px;
+            min-height: 100vh;
         }
 
         h1 {
-            font-size: 2.5em;
-            color: #2c3e50;
             margin-bottom: 20px;
         }
 
+        form {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        input[type="text"] {
+            padding: 8px;
+            font-size: 1em;
+        }
+
+        button {
+            padding: 8px 12px;
+            font-size: 1em;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 4px;
+        }
+
         table {
+            width: 90%;
             border-collapse: collapse;
-            width: 80%;
-            background-color: white;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            border-radius: 10px;
-            overflow: hidden;
+            margin-top: 10px;
+        }
+
+        table, th, td {
+            border: 1px solid #ddd;
         }
 
         th, td {
-            padding: 12px 16px;
-            border-bottom: 1px solid #e0e0e0;
+            padding: 8px;
             text-align: left;
         }
 
         th {
             background-color: #3498db;
             color: white;
-            font-weight: 600;
         }
 
-        tr:hover {
-            background-color: #f1f1f1;
-        }
-
-        caption {
-            caption-side: top;
-            font-size: 1.4em;
-            font-weight: bold;
-            padding: 15px;
-            color: #34495e;
-        }
-
-        p {
-            font-size: 1.2em;
-            color: #888;
+        .message {
+            color: red;
+            margin-bottom: 10px;
         }
     </style>
 </head>
 <body>
-    <h1>Top Countries by Population</h1>
+    <h1>Country Info</h1>
 
-    {% if results %}
+    <form method="POST">
+        <input type="text" name="country" placeholder="Enter country name">
+        <button type="submit" name="action" value="search">Search</button>
+        <button type="submit" name="action" value="reset">Reset</button>
+    </form>
+
+    {% if message %}
+        <div class="message">{{ message }}</div>
+    {% endif %}
+
     <table>
-        <caption>First 10 Countries</caption>
         <thead>
             <tr>
-                {% for key in results[0].keys() %}
-                    <th>{{ key }}</th>
-                {% endfor %}
+                {% if results %}
+                    {% for key in results[0].keys() %}
+                        <th>{{ key }}</th>
+                    {% endfor %}
+                {% else %}
+                    <th>No data available</th>
+                {% endif %}
             </tr>
         </thead>
         <tbody>
@@ -83,8 +100,5 @@
             {% endfor %}
         </tbody>
     </table>
-    {% else %}
-        <p>No data found.</p>
-    {% endif %}
 </body>
 </html>
