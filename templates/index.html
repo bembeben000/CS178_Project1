@@ -1,9 +1,13 @@
+<!-- Used Chat GPT for this code -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>SQL Results</title>
+
+    <!-- Inline CSS for styling the SQL results page -->
     <style>
+        /* Overall page layout */
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: #f4f7f9;
@@ -15,21 +19,25 @@
             min-height: 100vh;
         }
 
+        /* Header title styling */
         h1 {
             margin-bottom: 20px;
         }
 
+        /* Form styling: aligned inputs and buttons */
         form {
             display: flex;
             gap: 10px;
             margin-bottom: 20px;
         }
 
+        /* Input text field styling */
         input[type="text"] {
             padding: 8px;
             font-size: 1em;
         }
 
+        /* Button styling */
         button {
             padding: 8px 12px;
             font-size: 1em;
@@ -39,26 +47,31 @@
             border-radius: 4px;
         }
 
+        /* Table layout */
         table {
             width: 90%;
             border-collapse: collapse;
             margin-top: 10px;
         }
 
+        /* Border for table elements */
         table, th, td {
             border: 1px solid #ddd;
         }
 
+        /* Padding and alignment for table cells */
         th, td {
             padding: 8px;
             text-align: left;
         }
 
+        /* Header row color */
         th {
             background-color: #3498db;
             color: white;
         }
 
+        /* Message display styling (e.g., errors or "no results") */
         .message {
             color: red;
             margin-bottom: 10px;
@@ -66,33 +79,44 @@
     </style>
 </head>
 <body>
+    <!-- Page heading -->
     <h1>Country Info</h1>
 
+    <!-- Country search form -->
     <form method="POST">
+        <!-- Text input for country name -->
         <input type="text" name="country" placeholder="Enter country name">
+        <!-- Button to perform the search -->
         <button type="submit" name="action" value="search">Search</button>
+        <!-- Button to reset the results -->
         <button type="submit" name="action" value="reset">Reset</button>
     </form>
 
+    <!-- Display a message from the server if available -->
     {% if message %}
         <div class="message">{{ message }}</div>
     {% endif %}
 
+    <!-- Table to display SQL results -->
     <table>
         <thead>
             <tr>
+                <!-- Dynamically generate table headers from the first result row -->
                 {% if results %}
                     {% for key in results[0].keys() %}
                         <th>{{ key }}</th>
                     {% endfor %}
                 {% else %}
+                    <!-- Show message if no results -->
                     <th>No data available</th>
                 {% endif %}
             </tr>
         </thead>
         <tbody>
+            <!-- Loop through all rows returned from the query -->
             {% for row in results %}
                 <tr>
+                    <!-- Loop through each value in the row and display it -->
                     {% for value in row.values() %}
                         <td>{{ value }}</td>
                     {% endfor %}
