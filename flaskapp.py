@@ -78,14 +78,12 @@ def update_password():
         old_password = request.form['old_password']
         new_password = request.form['new_password']
 
-        # Check if user exists and old password is correct
         response = user_table.get_item(Key={'Name': username})
         if 'Item' not in response:
             message = "User not found."
         elif response['Item']['Password'] != old_password:
             message = "Old password is incorrect."
         else:
-            # Update the password
             user_table.update_item(
                 Key={'Name': username},
                 UpdateExpression='SET Password = :newpw',
@@ -95,7 +93,21 @@ def update_password():
 
     return render_template('update_password.html', message=message)
 
+@app.route('/delete-account', methods=['POST'])
+def delete_account():
+    username = request.form['username']
+    password = request.form['password']
 
+    user = user_table.get_item(Key={'Name': username})
+    if 'Item' not in user:
+        message = "User not found."
+    elif user['Item']['Password'] != password:
+        message = "Incorrect password. Account not deleted."
+    else:
+        user_table.delete_item(Key={'Name': username})
+        message = "Your account has been deleted."
+
+    return render_template('dynamo.html', message=message)
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=8080, debug=True)
